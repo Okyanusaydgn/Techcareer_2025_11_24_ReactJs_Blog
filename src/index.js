@@ -1,17 +1,32 @@
+// singele comment
+/* 
+JS multiple comment
+*/
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+
+// external css
 import './index.css';
+
+// external
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import Counter from './app/Counter';
+import { BrowserRouter } from 'react-router-dom';
+import ResuabilityToast from './reusability/ReusabilityToast';
 
+// Root
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      {/* <ResuabilityToast></ResuabilityToast> */}
+      <ResuabilityToast />
+      {/* <App /> */}
+      {/* <Counter /> */}
+    </BrowserRouter>
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
