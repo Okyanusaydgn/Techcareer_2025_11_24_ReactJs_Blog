@@ -1,6 +1,7 @@
-# ReactJs api 
+# ReactJs api
 
 ## Git
+
 ```sh
 git init
 git add .
@@ -10,11 +11,11 @@ git branch
 git push -u origin master
 
 ```
+
 ---
 
-
-
 ## Git Pull
+
 ```sh
 git remote -v
 
@@ -24,184 +25,215 @@ git pull
 git pull origin master
 
 ```
+
 ---
 
+## Yararlı Linkler
 
-## 
+```sh
+React Developer Tools ==>  https://chromewebstore.google.com/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?pli=1
+
+Redux DEvTools ==> https://chromewebstore.google.com/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd
+
+
+React datasheet ==> https://react.dev/
+React datasheet ==> https://tr.react.dev/
+
+```
+
+---
+
+##
+
 ```sh
 
 ```
+
 ---
 
+##
 
-## 
 ```sh
 
 ```
+
 ---
 
+##
 
-## 
 ```sh
 
 ```
+
 ---
 
+##
 
-## 
 ```sh
 
 ```
+
 ---
 
+##
 
-## 
 ```sh
 
 ```
+
 ---
 
+##
 
-## 
 ```sh
 
 ```
+
 ---
 
+##
 
-## 
 ```sh
 
 ```
+
 ---
 
+##
 
-## 
 ```sh
 
 ```
+
 ---
 
+##
 
-## 
 ```sh
 
 ```
+
 ---
 
+##
 
-## 
 ```sh
 
 ```
+
 ---
 
+##
 
-## 
 ```sh
 
 ```
+
 ---
 
+##
 
-## 
 ```sh
 
 ```
+
 ---
 
+##
 
-## 
 ```sh
 
 ```
+
 ---
 
+##
 
-## 
 ```sh
 
 ```
+
 ---
 
+##
 
-## 
 ```sh
 
 ```
+
 ---
 
+##
 
-## 
 ```sh
 
 ```
+
 ---
 
+##
 
-## 
 ```sh
 
 ```
+
 ---
 
+##
 
-## 
 ```sh
 
 ```
+
 ---
 
+##
 
-## 
 ```sh
 
 ```
+
 ---
 
+##
 
-## 
 ```sh
 
 ```
+
 ---
 
+##
 
-## 
 ```sh
 
 ```
+
 ---
 
+##
 
-## 
 ```sh
 
 ```
+
 ---
 
+##
 
-## 
 ```sh
 
 ```
+
 ---
 
+##
 
-## 
 ```sh
 
 ```
+
 ---
-
-
-## 
-```sh
-
-```
----
-
-
 
 `npm start`
 `npm test`
