@@ -8,7 +8,7 @@ import FooterComponent from './components/FooterComponent';
 function RouterApp() {
   return (
     <React.Fragment>
-      <HeaderComponent />
+      <HeaderComponent logo="fa fa-apple" />
       <MainComponent />
       <FooterComponent />
     </React.Fragment>
