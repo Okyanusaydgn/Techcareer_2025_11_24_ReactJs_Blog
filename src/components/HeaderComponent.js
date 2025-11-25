@@ -1,10 +1,24 @@
 // rfce => TAB
 
-import React from 'react';
+// I18N
 import { withTranslation } from 'react-i18next';
+
+// ROUTER
 import { Link } from 'react-router-dom';
 
-function HeaderComponent() {
+// REACT
+import React from 'react';
+
+// CSS DARK MODE
+import DarkMode from './DarkMode/DarkMode';
+import OtherLanguageReusability from '../internationalization/OtherLanguageReusability';
+
+// FUNCTION
+function HeaderComponent(props) {
+  // Object Destructuring
+  const { t } = props; // i18n
+
+  // RETURN
   return (
     <header>
       <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
