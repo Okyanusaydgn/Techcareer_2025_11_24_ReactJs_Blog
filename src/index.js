@@ -16,6 +16,9 @@ import Counter from './app/Counter';
 import { BrowserRouter } from 'react-router-dom';
 import ResuabilityToast from './reusability/ReusabilityToast';
 
+// Router
+import RouterApp from './RouterApp';
+
 // Root
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -25,6 +28,7 @@ root.render(
       <ResuabilityToast />
       {/* <App /> */}
       {/* <Counter /> */}
+      <RouterApp />
     </BrowserRouter>
   </React.StrictMode>
 );
