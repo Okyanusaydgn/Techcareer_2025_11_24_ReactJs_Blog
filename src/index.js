@@ -3,23 +3,29 @@
 JS multiple comment
 */
 
+// REACT
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-// external css
+// EXTERNAL CSS
 import './index.css';
 
-// external
-import App from './App';
+// I18N INTERNATIONALIZATION
+import './internationalization/i18nlanguage';
+
+// UTILS
 import reportWebVitals from './reportWebVitals';
-import Counter from './app/Counter';
+
+// ROUTER
 import { BrowserRouter } from 'react-router-dom';
+
+// REUSABILITY TOAST
 import ResuabilityToast from './reusability/ReusabilityToast';
 
-// Router
+// COMPONENTS
 import RouterApp from './RouterApp';
 
-// Root
+// ROOT
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
