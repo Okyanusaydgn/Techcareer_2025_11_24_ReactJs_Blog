@@ -59,6 +59,23 @@ import { WOW } from "wowjs";
 import counterUp from "counterup2";
 
 /* -----------------------------------------------------
+   TEMA (DARK/LIGHT) INITIALIZE
+   - DarkMode componentinin localStorage'a "theme" = "dark" / "light"
+     yazdığını varsayıyoruz.
+   - Sayfa ilk yüklenirken FOUC yaşamamak için burada body class'ını set ediyoruz.
+----------------------------------------------------- */
+
+if (typeof window !== "undefined") {
+    const savedTheme = localStorage.getItem("theme");
+
+    if (savedTheme === "dark") {
+        document.body.classList.add("dark-mode");
+    } else {
+        document.body.classList.remove("dark-mode");
+    }
+}
+
+/* -----------------------------------------------------
    GLOBAL PENCEREYE GEREKEN NESNELERİ AT
    (Eski script tarzı kodlar hala çalışsın diye)
 ----------------------------------------------------- */
