@@ -1,8 +1,8 @@
 // REACT
-import React, {useEffect, useState, useMemo} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 
 // ROUTER
-import {Link, useNavigate} from 'react-router-dom';
+import {useBlocker, useNavigate} from 'react-router-dom';
 
 // API LIST CALL
 import BlogCategoryApiService from '../../services/BlogCategoryApiService';
@@ -13,7 +13,8 @@ import {withTranslation} from 'react-i18next';
 // IMPORT
 import Swal from "sweetalert2"
 import toast from "react-hot-toast"
-import {start} from "@popperjs/core";
+import ReusabilityToast from "../../reusability/ReusabilityToast";
+import footerComponent from "../FooterComponent";
 
 // FUNCTION
 function BlogCategoryList({props, t, i18n}) {
@@ -96,10 +97,10 @@ function BlogCategoryList({props, t, i18n}) {
     useEffect(() => {
         // Component Did Mount
         fetchBlogList().then(
-            ()=> {
+            () => {
                 showToast("Blog Kategori Listeleme", "list");
             }
-        ).catch(()=> showToast("Blog Kategori Listelememedi", "list"));
+        ).catch(() => showToast("Blog Kategori Listelememedi", "list"));
     }, []);
 
     // FUNCTION
@@ -159,7 +160,7 @@ function BlogCategoryList({props, t, i18n}) {
             const nameStr = String(cat.categoryName ?? "").toLowerCase();
             const dateStr = String(cat.systemCreatedDate ?? "").toLowerCase();
 
-            return(
+            return (
                 idStr.includes(normalized) ||
                 nameStr.includes(normalized) ||
                 dateStr.includes(normalized)
@@ -170,15 +171,15 @@ function BlogCategoryList({props, t, i18n}) {
         const total = filtered.length || 0;
         const pages = total === 0 ? 1 : Math.ceil(total / pageSize);
         const safeCurrentPage = Math.min(Math.max(1, currentPage), pages);
-       const startIndex = (safeCurrentPage-1)*pageSize;
-       const paged = filtered.slide(startIndex, startIndex+pageSize);
+        const startIndex = (safeCurrentPage - 1) * pageSize;
+        const paged = filtered.slide(startIndex, startIndex + pageSize);
 
-       return{
-           pageData:paged,
-           totalItems:total,
-           totalPages:pages
-       }
-    },[blogCategoryApiListData,searchTerm,pageSize,currentPage]);
+        return {
+            pageData: paged,
+            totalItems: total,
+            totalPages: pages
+        }
+    }, [blogCategoryApiListData, searchTerm, pageSize, currentPage]);
 
     // =======================================================================
     // PAGINATION
@@ -211,7 +212,7 @@ function BlogCategoryList({props, t, i18n}) {
     // MODAL HELPER FUNCTIONS
     // =======================================================================
     // CREATE MODAL ACTIVE
-    const openCreateModal = ()=>{
+    const openCreateModal = () => {
         setModalMode("create");
         setSelectedCategory(null);
         setFormData({
@@ -221,14 +222,14 @@ function BlogCategoryList({props, t, i18n}) {
     }
 
     // SHOW MODAL ACTIVE
-    const openShowModal = (category)=>{
+    const openShowModal = (category) => {
         setModalMode("show");
         setSelectedCategory(category);
         setIsModalOpen(true)
     }
 
     // EDIT MODAL ACTIVE
-    const openEditModal = (category)=>{
+    const openEditModal = (category) => {
         setModalMode("edit");
         setSelectedCategory(category);
         setFormData({
@@ -238,7 +239,7 @@ function BlogCategoryList({props, t, i18n}) {
     }
 
     // CLOSE MODAL ACTIVE
-    const closeModal = ()=>{
+    const closeModal = () => {
         setIsModalOpen(false);
         setSelectedCategory(null);
         setFormData({
@@ -250,19 +251,19 @@ function BlogCategoryList({props, t, i18n}) {
     // =======================================================================
     // FORM HANDLE FUNCTIONS ===> Formda gelen verileri almak
     // =======================================================================
-    const handleChange =(event) =>{
-        const {name,value } = event.target;
+    const handleChange = (event) => {
+        const {name, value} = event.target;
         // Form içindeki verileri değiştirmek(set) etmek
-        setFormData((prev)=>({
+        setFormData((prev) => ({
             ...prev,
-            [name]:value,
-    }))
+            [name]: value,
+        }))
     }; //end handleChange
 
     // =======================================================================
     // FORM SUBMIT FUNCTIONS ===> Formda gelen verileri İşlem yapmak
     // =======================================================================
-    const handleSubmit =  async (event) =>{
+    const handleSubmit = async (event) => {
         // Browser sen dur hiç bir şey yapma ben biliyorum ne yapacağımı
         event.preventDefault();
 
@@ -270,33 +271,33 @@ function BlogCategoryList({props, t, i18n}) {
         setSaving(true);
         setError("");
 
-        try{
-            if(modalMode === "create"){
+        try {
+            if (modalMode === "create") {
                 const response = await BlogCategoryApiService.objectApiCreate(formData);
-                if(response.status===200 || response.status===201){
+                if (response.status === 200 || response.status === 201) {
                     await fetchBlogList();
                     closeModal();
-                    showToast("Blog Kategori Oluşturuldu","create");
+                    showToast("Blog Kategori Oluşturuldu", "create");
                 }
-            } else if(modalMode === "edit" &&
+            } else if (modalMode === "edit" &&
                 selectedCategory &&
                 selectedCategory.categoryId
-            ){
-                const response = await BlogCategoryApiService.objectApiUpdate(selectedCategory.categoryId,formData);
-                if(response.status===200){
+            ) {
+                const response = await BlogCategoryApiService.objectApiUpdate(selectedCategory.categoryId, formData);
+                if (response.status === 200) {
                     await fetchBlogList();
                     closeModal();
-                    showToast("Blog Kategori Güncellendi","update");
+                    showToast("Blog Kategori Güncellendi", "update");
                 }
             }
-        }catch (e) {
-            console.error("handleSubmit error :",e) ;
+        } catch (e) {
+            console.error("handleSubmit error :", e);
             setError(
-                modalMode==="create"
+                modalMode === "create"
                     ? "Kategori oluştururken bir hata meydana geldi"
                     : "Kategori güncellerken bir hata meydana geldi."
             );
-        }finally {
+        } finally {
             setSaving(false)
         }
     }; //end handleChange
@@ -310,28 +311,28 @@ function BlogCategoryList({props, t, i18n}) {
         // if (window.confirm(id + ' nolu datayı silmek istiyor musunuz ?')) { }
         const result = await Swal.fire({
             title: `${category.categoryName} Silinsin mi?`,
-            text:"Bu işlemi geri alamazsın",
-            icon:"warning",
-            showCancelButton:true,
+            text: "Bu işlemi geri alamazsın",
+            icon: "warning",
+            showCancelButton: true,
             confirmButtonText: "Evet, Sil",
-            cancelButtonText:"Vazgeç",
+            cancelButtonText: "Vazgeç",
         });
-        
+
         // Eğer kullanıcı silmekten vazgeçmişse
-        if(!result.isConfirmed)
+        if (!result.isConfirmed)
             return;
 
         // Eğer kullanıcı silmek istiyorsa
-        try{
+        try {
             setError("");
-          const response= await  BlogCategoryApiService.objectApiDelete(category.categoryId);
-            if(response.status===200){
+            const response = await BlogCategoryApiService.objectApiDelete(category.categoryId);
+            if (response.status === 200) {
                 await fetchBlogList();
                 closeModal();
-                showToast("Blog Kategori Silindi","delete");
+                showToast("Blog Kategori Silindi", "delete");
             }
-        }catch (e) {
-            console.error("handleSubmit error :",e) ;
+        } catch (e) {
+            console.error("handleSubmit error :", e);
             setError("Blog Kategorisinde bir hata meydana geldi");
             //window.location = 'blog/category/list';
         }
@@ -340,16 +341,16 @@ function BlogCategoryList({props, t, i18n}) {
     // =======================================================================
     // MODAL TITLE & BODY
     // =======================================================================
-    const getModalTitle =()=>{
+    const getModalTitle = () => {
 
         // Modal başlığı
-        if(modalMode ==="create") return "Yeni Blog Kategorisi Oluştur";
-        if(modalMode ==="edit") return "Yeni Blog Kategorisi Güncelle";
+        if (modalMode === "create") return "Yeni Blog Kategorisi Oluştur";
+        if (modalMode === "edit") return "Yeni Blog Kategorisi Güncelle";
         return "Blog Kategorisi Detayı";
 
         // Modal Body
-        const renderModalBody =()=>{
-            if(modalMode ==="show" && selectedCategory){
+        const renderModalBody = () => {
+            if (modalMode === "show" && selectedCategory) {
                 return (
                     <div className="mb-2">
                         <div className="mb-2">
@@ -367,7 +368,7 @@ function BlogCategoryList({props, t, i18n}) {
                 ); //end return
             } //end if
             return (
-                <form onSubmit ={handleSubmit()}>
+                <form onSubmit={handleSubmit()}>
                     {/*CATEGORY NAME*/}
                     <div className="mb-3">
                         <label htmlFor="categoryName" className="form-label">
@@ -388,12 +389,12 @@ function BlogCategoryList({props, t, i18n}) {
 
                     <div className="d-flex justify-content-end gap-2">
                         {/*CLOSE*/}
-                       <button
-                           type="button"
-                           className="btn btn-outline-secondary"
-                           onClick={closeModal}
-                           disabled={saving}
-                       >{t("close")}</button>
+                        <button
+                            type="button"
+                            className="btn btn-outline-secondary"
+                            onClick={closeModal}
+                            disabled={saving}
+                        >{t("close")}</button>
 
                         {/*SUBMIT*/}
                         <button
@@ -401,7 +402,7 @@ function BlogCategoryList({props, t, i18n}) {
                             className="btn btn-primary"
                             disabled={saving}>
                             {
-                                saving ? "Kaydediliyor" : modalMode==="create" ? t("create") : t("update")
+                                saving ? "Kaydediliyor" : modalMode === "create" ? t("create") : t("update")
                             }
                         </button>
                     </div>
@@ -418,71 +419,276 @@ function BlogCategoryList({props, t, i18n}) {
     // RETURN
     return (
         <React.Fragment>
+            {/*Toaster provider (SAğ,alt, global varsayılan)*/}
+            <ReusabilityToast/>
+
             <br/>
-            <h1 class="text-center display-5 mt-5 mb-5">{t('blog_category_list')}</h1>
-            <Link className="btn btn-primary ms-2 me-4" to="/blog/category/api/v1/create">
-                {t('create')}
-            </Link>
+            <h1 className="text-center display-5 mt-3 mb-4 animate_animated animate_fadeInDown">{t('blog_category_list')}</h1>
 
-            <div className="table-responsive">
-                <table className="table table-primary table-striped table-responsive mb-4">
-                    <thead>
-                    <tr>
-                        <th scope="col">{t('id')}</th>
-                        <th scope="col">{t('blog_category_name')}</th>
-                        <th scope="col">{t('date')}</th>
-                        <th scope="col">{t('update')}</th>
-                        <th scope="col">{t('show')}</th>
-                        <th scope="col">{t('delete')}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {blogCategoryApiListData.map((data) => (
-                        <tr key={data.categoryId}>
-                            <td>{data.categoryId}</td>
-                            <td>{data.categoryName}</td>
-                            <td>{data.systemCreatedDate}</td>
+            {/*Filter+ Datalist+Yeni kategori Butonu*/}
+            <div className="container mb-3">
+                <div className="row align-items-end g-2">
+                    {/*SEARCH INPUT*/}
+                    <div className="col-md-4">
+                        <label htmlFor="search_id" className="form-label fw-semibold">
+                            Filtrele (ID/ isim/ Tarih)
+                        </label>
+                        <input
+                            type="search"
+                            list="blogCategoryNames"
+                            id="search_id"
+                            className="form-control"
+                            placeholder="Ara ..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                        <datalist id="blogCategoryNames">
+                            {blogCategoryApiListData.map((cat) => (
+                                <option key={cat.categoryId} value={cat.categoryName}/>
+                            ))}
+                        </datalist>
+                    </div>
+                    {/*search*/}
 
-                            <td>
-                                <Link to={`/blog/category/api/v1/update/${data.categoryId}`}>
-                                    <i
-                                        onClick={() => {
-                                            setUpdateBlogCategory(data);
-                                        }}
-                                        className="fa-solid fa-wrench text-primary"
-                                    ></i>
-                                </Link>
-                            </td>
+                    {/*FILTER*/}
+                    <div className="col-md-3">
+                        <label htmlFor="" className="form-label fw-semibold">Sayfa başına kayıt</label>
+                        <select
+                            className="form-select"
+                            value={pageSize}
+                            onchange={(e) => setPageSize(Number(e.target.valueOf))}
+                            title="Filtreleme için"
+                        >
+                            <option value={5}>5 Veri Listele</option>
+                            <option value={10}>10 Veri Listele</option>
+                            <option value={15}>15 Veri Listele</option>
+                            <option value={50}>50 Veri Listele</option>
+                            <option value={100}>100 Veri Listele</option>
+                        </select>
+                    </div>
 
-                            <td>
-                                <Link to={`/blog/category/api/v1/find/${data.categoryId}`}>
-                                    <i
-                                        onClick={() => {
-                                            setViewBlogCategory(data.categoryId);
-                                        }}
-                                        className="fa-solid fa-eye text-success"
-                                    ></i>
-                                </Link>
-                            </td>
+                    {/*TOPLAM KAYIT*/}
+                    <div className="col-md-5 text-md-end">
+                        <label htmlFor="" className="form-label d-block fw-semibold">Toplam
+                            Kayıt</label>
+                    </div>
 
-                            <td>
-                                <Link to={`/blog/category/api/v1/list`}>
-                                    <i
-                                        onClick={() => {
-                                            setDeleteBlogCategory(data.categoryId);
-                                        }}
-                                        class="fa-solid fa-trash-can text-danger"
-                                    ></i>
-                                </Link>
-                            </td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
+                    <div className="d-flex justify-content-md-end alig-items-center gap-3">
+                        <span className="badge bg-secondary">{totalItems} Kayıt</span>
+                        <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={openCreateModal}
+                        >
+                            <i className="fa-solid fa-plus me-1"/>
+                            {t("create")}
+                        </button>
+                    </div>
+                </div>
+                {/*row*/}
             </div>
+            {/*container*/}
+
+            {/*ALERT ERROR*/}
+            {
+                error && (
+                    <div className="alert alert-danger mt-1 mb-1 py-2 px-3 text-center">
+                        {error}
+                    </div>
+                )
+            }{/*end error*/}
+
+            {/*LOADING ERROR*/}
+            {
+                loading ? (
+                    <div className="text-center my-5">
+                        <div className="spinner-border"/>
+                    </div>
+                ) : (
+                    <div className="table-responsive mt-3 container animate_animated animate__backInRight">
+                        {pageData.length === 0 ? (
+                            <div className="alert alert-warning">
+                                Filtrelemede Uygun sonuç bulunamadı
+                            </div>
+                        ) : (
+                            <table className="table table-striped table-bordered mb-4 align-middle"
+                                   style={{borderRadius: "0.75", overflow: "hidden"}}
+                            >
+                                <thead>
+                                <tr>
+                                    <th scope="col">{t('id')}</th>
+                                    <th scope="col">{t('blog_category_name')}</th>
+                                    <th scope="col">{t('date')}</th>
+                                    <th scope="col">{t('update')}</th>
+                                    <th scope="col">{t('show')}</th>
+                                    <th scope="col">{t('delete')}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {pageData.map((data) => (
+                                    <tr key={data.categoryId}>
+                                        <td>{data.categoryId}</td>
+                                        <td>{data.categoryName}</td>
+                                        <td>{data.systemCreatedDate}</td>
+
+                                        <td>
+                                            <button
+                                                type="button"
+                                                className="btn btn-outline-primary btn-sm"
+                                                onClick={() => openEditModal(data)}
+                                            >
+                                                <i className="fa-solid fa-pen-to-square"></i>
+                                            </button>
+                                        </td>
+
+                                        <td>
+                                            <button
+                                                type="button"
+                                                className="btn btn-outline-success btn-sm"
+                                                onClick={() => openShowModal(data)}
+                                            >
+                                                <i className="fa-solid fa-expand"></i>
+                                            </button>
+                                        </td>
+
+                                        <td>
+
+                                            <button
+                                                type="button"
+                                                className="btn btn-outline-danger btn-sm"
+                                                onClick={() => handleDelete(data)}
+                                            >
+                                                <i className="fa-solid fa-trash-can"></i>
+                                            </button>
+                                            {/*<Link to={`/blog/category/api/v1/list`}>
+                                                <i
+                                                    onClick={() => {
+                                                        setDeleteBlogCategory(data.categoryId);
+                                                    }}
+                                                    className="fa-solid fa-trash-can text-danger"
+                                                ></i>
+                                            </Link>*/}
+                                        </td>
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        )} {/*end pageData.length*/}
+
+                        {totalItems > 0 && (
+                            <div className="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+                                <div className="small text-muted">
+                                    Sayfa {currentPage} / {totalPages}
+                                </div>
+
+                                <nav>
+                                    <ul className="pagination pagination-sm mb-0">
+                                        <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+                                            <button className="page-link" onClick={() => goToPage(1)}>
+                                                «
+                                            </button>
+                                        </li>
+                                        <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+                                            <button
+                                                className="page-link"
+                                                onClick={() => goToPage(currentPage - 1)}
+                                            >
+                                                ‹
+                                            </button>
+                                        </li>
+
+                                        {getPageNumbers().map((page) => (
+                                            <li
+                                                key={page}
+                                                className={`page-item ${
+                                                    page === currentPage ? "active" : ""
+                                                }`}
+                                            >
+                                                <button
+                                                    className="page-link"
+                                                    onClick={() => goToPage(page)}
+                                                >
+                                                    {page}
+                                                </button>
+                                            </li>
+                                        ))}
+
+                                        <li
+                                            className={`page-item ${
+                                                currentPage === totalPages ? "disabled" : ""
+                                            }`}
+                                        >
+                                            <button
+                                                className="page-link"
+                                                onClick={() => goToPage(currentPage + 1)}
+                                            >
+                                                ›
+                                            </button>
+                                        </li>
+                                        <li
+                                            className={`page-item ${
+                                                currentPage === totalPages ? "disabled" : ""
+                                            }`}
+                                        >
+                                            <button
+                                                className="page-link"
+                                                onClick={() => goToPage(totalPages)}
+                                            >
+                                                »
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        )}
+                    </div>
+                )}
+
+            {/*MODAL*/}
+            {isModalOpen && (
+                <div className="modal fade show d-block"
+                role="dialog"
+                     style={{backgroundColor:"rgba()0,0,0,0.4"}}
+                >
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content animate__animated animate__zoomIn">
+                            <div className="modal-header">
+                                <h5 className="modal-title">{getModalTitle()}</h5>
+                                <button
+                                    type="button"
+                                    className="btn-close"
+                                    onClick={closeModal}
+                                />
+                            </div>
+                            <div className="modal-body">---</div>
+
+                            {modalMode==="show" && (
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" onClick={closeModal}
+                                            >
+                                        Kapat
+                                    </button>
+                                    {selectedCategory &&(
+                                        <button
+                                            type="button"
+                                            className="btn btn-warning"
+                                            onClick={() => openEditModal(selectedCategory)}>
+                                            <i className="fa-solid fa-binoculars"/>
+                                            {t("update")}
+                                        </button>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </React.Fragment>
     ); // end return
 } // end function
 
 // HOC
 export default withTranslation()(BlogCategoryList);
+
+// renderModalBody
+// filtered.slide
