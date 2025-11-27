@@ -1,58 +1,53 @@
-// React
-import React from "react";
+// src/components/DarkMode/DarkMode.js
 
-// Sun , Moon
-import { ReactComponent as Sun } from "./Sun.svg";
-import { ReactComponent as Moon } from "./Moon.svg";
+import React, { useEffect, useState } from "react";
 
-// DarkMode.css
-import "./DarkMode.css";
+function DarkMode() {
+    const [isDark, setIsDark] = useState(false);
 
-// Function
-const DarkMode = () => {
-    // DARK MODE
-    const setDarkMode = () => {
-        document.querySelector("body").setAttribute('data-theme', 'dark')
-        localStorage.setItem("selectedTheme", "dark")
-    }
+    // İlk yüklemede localStorage'tan oku + body class'ını set et
+    useEffect(() => {
+        const savedTheme = localStorage.getItem("theme");
+        const activeDark = savedTheme === "dark";
 
-    // LIGHT MODE
-    const setLightMode = () => {
-        document.querySelector("body").setAttribute('data-theme', 'light')
-        localStorage.setItem("selectedTheme", "light")
-    }
+        setIsDark(activeDark);
+        document.body.classList.toggle("dark-mode", activeDark);
+    }, []);
 
-    // SELECTED
-    const selectedTheme = localStorage.getItem("selectedTheme")
-    if (selectedTheme === "dark") {
-        setDarkMode();
-    }
+    const handleToggle = () => {
+        setIsDark((prev) => {
+            const next = !prev;
+            const nextTheme = next ? "dark" : "light";
 
-    // Eğer button tıklanmışsa DarkMode seçilsin
-    const onChangeToggleTheme = (e) => {
-        if (e.target.checked)
-            setDarkMode()
-        else
-            setLightMode()
+            // body class
+            document.body.classList.toggle("dark-mode", next);
+            // localStorage
+            localStorage.setItem("theme", nextTheme);
+
+            return next;
+        });
     };
 
-    // RETURN
     return (
-        <div className='dark_mode'>
-            <input
-                className='dark_mode_input'
-                type='checkbox'
-                id='darkmode-toggle'
-                onChange={onChangeToggleTheme}
-                defaultChecked={selectedTheme === "dark"}
-            />
-            <label className='dark_mode_label' htmlFor='darkmode-toggle'>
-                <Sun />
-                <Moon />
-            </label>
-        </div>
+        <button
+            type="button"
+            className="btn btn-outline-light btn-sm d-flex align-items-center gap-2"
+            onClick={handleToggle}
+            title={isDark ? "Light mode" : "Dark mode"}
+        >
+            {isDark ? (
+                <>
+                    <i className="fa-regular fa-sun" />
+                    <span className="d-none d-md-inline">Light</span>
+                </>
+            ) : (
+                <>
+                    <i className="fa-solid fa-moon" />
+                    <span className="d-none d-md-inline">Dark</span>
+                </>
+            )}
+        </button>
     );
-};
+}
 
-// Export
 export default DarkMode;

@@ -1,13 +1,133 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Global temel stil */
+:root {
+    --bg-color: #ffffff;
+    --text-color: #212529;
+
+    --navbar-bg: #212529;
+    --navbar-text: #f8f9fa;
+
+    --surface-bg: #ffffff;
+    --surface-border: #dee2e6;
 }
 
+/* LIGHT MODE (default) */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Root container da temaya uysun */
+#root {
+    min-height: 100vh;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+/* CODE FONT */
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* DARK MODE (DarkMode componentinin body'ye "dark-mode" class'ı eklediğini varsayıyorum) */
+body.dark-mode {
+    --bg-color: #121212;
+    --text-color: #f8f9fa;
+
+    --navbar-bg: #000000;
+    --navbar-text: #f8f9fa;
+
+    --surface-bg: #1f1f1f;
+    --surface-border: #444;
+}
+
+/* Dark modda root ve ana layout container'lar da kararsın */
+body.dark-mode #root,
+body.dark-mode .app,
+body.dark-mode .app-root,
+body.dark-mode .container-fluid {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+/* Navbar'ı temaya göre renklendir */
+.navbar-dark.bg-dark {
+    background-color: var(--navbar-bg) !important;
+}
+
+.navbar-dark .navbar-brand,
+.navbar-dark .nav-link,
+.navbar-dark .navbar-text {
+    color: var(--navbar-text) !important;
+}
+
+/* Kart / modal / dropdown gibi yüzeyler */
+body.dark-mode .card,
+body.dark-mode .modal-content,
+body.dark-mode .dropdown-menu,
+body.dark-mode .list-group-item {
+    background-color: var(--surface-bg);
+    color: var(--text-color);
+    border-color: var(--surface-border);
+}
+
+/* Form kontrolleri */
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+    background-color: #1f1f1f;
+    color: var(--text-color);
+    border-color: #495057;
+}
+
+body.dark-mode .form-control::placeholder {
+    color: #adb5bd;
+}
+
+/* Tablo */
+body.dark-mode table,
+body.dark-mode .table {
+    color: var(--text-color);
+}
+
+body.dark-mode .table thead {
+    background-color: #212529;
+}
+
+/* Butonlar (light butonların dark modda çok patlamaması için küçük dokunuş) */
+body.dark-mode .btn-outline-success {
+    color: #20c997;
+    border-color: #20c997;
+}
+
+body.dark-mode .btn-outline-success:hover {
+    background-color: #20c997;
+    color: #000;
+}
+
+/* İçerik fixed-top navbar altında kalmasın diye küçük yardımcı */
+.app-content,
+main {
+    padding-top: 4.5rem;
+}
+
+/* ----------------------------
+   Language dropdown bayrak boyutu
+   #languageDropdown'dan açılan dropdown içindeki img'leri küçült
+----------------------------- */
+
+#languageDropdown + .dropdown-menu img {
+    width: 18px;
+    height: 18px;
+    object-fit: cover;
+    margin-right: 6px;
 }
