@@ -90,13 +90,16 @@ function BlogCategoryList({props, t, i18n}) {
         });
     };
 
-
     // =======================================================================
     // EFFECT (LİSTEYİ ÇEK)
     // =======================================================================
     useEffect(() => {
         // Component Did Mount
-        fetchBlogList();
+        fetchBlogList().then(
+            ()=> {
+                showToast("Blog Kategori Listeleme", "list");
+            }
+        ).catch(()=> showToast("Blog Kategori Listelememedi", "list"));
     }, []);
 
     // FUNCTION
@@ -298,7 +301,6 @@ function BlogCategoryList({props, t, i18n}) {
         }
     }; //end handleChange
 
-
     // =======================================================================
     // DELETE (SweetAlert2 + TOAST )
     // =======================================================================
@@ -336,53 +338,88 @@ function BlogCategoryList({props, t, i18n}) {
     }; // end handleDelete
 
     // =======================================================================
-    // listManipulationAfter
+    // MODAL TITLE & BODY
     // =======================================================================
-    // After, delete, update, create (data giving)
-    // LIST
-    const listManipulationAfter = () => {
-        BlogCategoryApiService.objectApiList()
-            .then((response) => {
-                if (response.status === 200) {
-                    // CONSOLE
-                    console.log(response);
-                    console.log(response.data);
-                    console.log(response.status);
-                    console.log(response.headers);
+    const getModalTitle =()=>{
 
-                    // USESTATE
-                    setBlogCategoryApiListData(response.data);
-                }
-            })
-            .catch((error) => {
-                console.error('Blog Category listManipulationAfter: ', error);
-            });
-    }; // end listManipulationAfter
+        // Modal başlığı
+        if(modalMode ==="create") return "Yeni Blog Kategorisi Oluştur";
+        if(modalMode ==="edit") return "Yeni Blog Kategorisi Güncelle";
+        return "Blog Kategorisi Detayı";
 
-    // UPDATE LOCAL-STORAGE(ID)
-    const setUpdateBlogCategory = (data) => {
-        let {id, categoryName} = data;
-        localStorage.setItem('blog_category_update_id', id);
-        localStorage.setItem('blog_category_category_name', categoryName);
-    };
+        // Modal Body
+        const renderModalBody =()=>{
+            if(modalMode ==="show" && selectedCategory){
+                return (
+                    <div className="mb-2">
+                        <div className="mb-2">
+                            <strong>{t("blog_id")}: </strong>{" "} {selectedCategory.categoryId}
+                        </div>
 
-    // UPDATE LOCAL-STORAGE(ID)
-    const setViewBlogCategory = (data) => {
-        let {id} = data;
-        localStorage.setItem('blog_category_view_id', id);
-    };
+                        <div className="mb-2">
+                            <strong>{t("blog_category_name")}: </strong>{" "} {selectedCategory.categoryName}
+                        </div>
+
+                        <div className="mb-2">
+                            <strong>{t("date")}: </strong>{" "} {selectedCategory.systemCreatedDate || "-"}
+                        </div>
+                    </div>
+                ); //end return
+            } //end if
+            return (
+                <form onSubmit ={handleSubmit()}>
+                    {/*CATEGORY NAME*/}
+                    <div className="mb-3">
+                        <label htmlFor="categoryName" className="form-label">
+                            {t("blog_category_name")}
+                        </label>
+                        <input
+                            type="text"
+                            id="categoryName"
+                            name="categoryName"
+                            className="form-control"
+                            value={formData.categoryName}
+                            onChange={handleChange}
+                            placeholder="kategori name yazınız, Backend, frontend"
+                            required
+                        />
+                    </div>
 
 
+                    <div className="d-flex justify-content-end gap-2">
+                        {/*CLOSE*/}
+                       <button
+                           type="button"
+                           className="btn btn-outline-secondary"
+                           onClick={closeModal}
+                           disabled={saving}
+                       >{t("close")}</button>
+
+                        {/*SUBMIT*/}
+                        <button
+                            type="submit"
+                            className="btn btn-primary"
+                            disabled={saving}>
+                            {
+                                saving ? "Kaydediliyor" : modalMode==="create" ? t("create") : t("update")
+                            }
+                        </button>
+                    </div>
+                </form>
+            );  //end return
+        } //end renderModalBody
+    } //end getModalTitle
+
+    //////////////////////////////////////////////////////////////////////////
+    // =======================================================================
+    // JSX
+    // =======================================================================
 
     // RETURN
     return (
         <React.Fragment>
             <br/>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-            <h1 class="text-center display-5 mt-3 mb-5">{t('blog_category_list')}</h1>
+            <h1 class="text-center display-5 mt-5 mb-5">{t('blog_category_list')}</h1>
             <Link className="btn btn-primary ms-2 me-4" to="/blog/category/api/v1/create">
                 {t('create')}
             </Link>
