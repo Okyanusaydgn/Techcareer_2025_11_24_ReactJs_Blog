@@ -135,7 +135,12 @@ function BlogCategoryList({props, t, i18n}) {
     }, [searchTerm, pageSize, blogCategoryApiListData.length]);
 
     // =======================================================================
-    // USEMEMO
+    /*
+    USEMEMO (expensive) hesaplanması maliyetli(pahalı) işlemleri sürekli hesaplamamak için kullandığımız bir React hooksu'dur
+
+    Genellikle: büyük array, filtrelemeler, ağır hesaplamalarda, çok karmaşık obje için kullanırız.
+    Amaç: Her render'dan sonra tekrar çalışmasın ancak ilgili parametreler çalışsın(state/props) değiştiğinde tekrar hesaplama yapsın.
+    */
     // =======================================================================
     const {pageData, totalItems, totalPages} = useMemo(() => {
 
@@ -171,6 +176,34 @@ function BlogCategoryList({props, t, i18n}) {
            totalPages:pages
        }
     },[blogCategoryApiListData,searchTerm,pageSize,currentPage]);
+
+    // =======================================================================
+    // PAGINATION
+    // =======================================================================
+    // GOTO PAGE
+    const goToPage = (page) => {
+        if (page < 1 || page > totalPages) return;
+        setCurrentPage(page);
+    };
+
+    const getPageNumbers = () => {
+        const maxButtons = 5;
+        const pages = [];
+
+        let start = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+        let end = start + maxButtons - 1;
+
+        if (end > totalPages) {
+            end = totalPages;
+            start = Math.max(1, end - maxButtons + 1);
+        }
+
+        for (let i = start; i <= end; i++) {
+            pages.push(i);
+        }
+        return pages;
+    };
+
 
     // =======================================================================
     // listManipulationAfter
