@@ -244,10 +244,60 @@ function BlogCategoryList({props, t, i18n}) {
         setModalMode("show")
     }
 
+    // =======================================================================
+    // FORM HANDLE FUNCTIONS ===> Formda gelen verileri almak
+    // =======================================================================
+    const handleChange =(event) =>{
+        const {name,value } = event.target;
+        // Form içindeki verileri değiştirmek(set) etmek
+        setFormData((prev)=>({
+            ...prev,
+            [name]:value,
+    }))
+    }; //end handleChange
+
 
     // =======================================================================
-    // FORM HANDLE FUNCTIONS
+    // FORM SUBMIT FUNCTIONS ===> Formda gelen verileri İşlem yapmak
     // =======================================================================
+    const handleSubmit =  async (event) =>{
+        // Browser sen dur hiç bir şey yapma ben biliyorum ne yapacağımı
+        event.preventDefault();
+
+        // Default
+        setSaving(true);
+        setError("");
+
+        try{
+            if(modalMode === "create"){
+                const response = await BlogCategoryApiService.objectApiCreate(formData);
+                if(response.status===200 || response.status===201){
+                    await fetchBlogList();
+                    closeModal();
+                    showToast("Blog Kategori Oluşturuldu","create");
+                }
+            } else if(modalMode === "edit" &&
+                selectedCategory &&
+                selectedCategory.categoryId
+            ){
+                const response = await BlogCategoryApiService.objectApiUpdate(selectedCategory.categoryId,formData);
+                if(response.status===200){
+                    await fetchBlogList();
+                    closeModal();
+                    showToast("Blog Kategori Güncellendi","update");
+                }
+            }
+        }catch (e) {
+            console.error("handleSubmit error :",e) ;
+            setError(
+                modalMode==="create"
+                    ? "Kategori oluştururken bir hata meydana geldi"
+                    : "Kategori güncellerken bir hata meydana geldi."
+            );
+        }finally {
+            setSaving(false)
+        }
+    }; //end handleChange
 
     // =======================================================================
     // listManipulationAfter
